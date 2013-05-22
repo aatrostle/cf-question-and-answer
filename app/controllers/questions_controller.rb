@@ -5,13 +5,23 @@ class QuestionsController < ApplicationController
 
   end
 
+  def show
+    @question = Question.find(params[:id])
+    @last_edited_by = User.find(@question.last_edited_by)
+  end
+
   def new
     @question = Question.new
 
   end
 
+  def edit
+    @question = Question.find(params[:id])
+  end
+
   def create
     @question = Question.new(params[:question])
+    @question.users << current_user
     @question.last_edited_by = current_user.id
     if @question.save
       flash[:notice] = "Question has been created."
@@ -21,17 +31,11 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def show
-    @question = Question.find(params[:id])
-    @last_edited_by = User.find(@question.last_edited_by)
-  end
-
-  def edit
-    @question = Question.find(params[:id])
-  end
-
   def update
     @question = Question.find(params[:id])
+    unless @question.users.include? current_user
+      @question.users << current_user
+    end
     @question.last_edited_by = current_user.id
     if @question.update_attributes(params[:question])
       flash[:notice] = "Question has been updated."

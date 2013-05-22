@@ -1,6 +1,13 @@
 <h2><%= @question.title %></h2>
 <p>Answer: <%= @question.answer %></p>
 <p>Last Edited By: <%= @last_edited_by.email %></p>
+<h3>Contributors:</h3>
+<ul>
+  <% @question.users.each do |user| %>
+    <li><%= user.email %></li>
+  <% end %>
+</ul>
+
 <p><%= link_to "Edit Question", edit_question_path %></p>
 <%= link_to "New Question", new_question_path %>
-
+<%= link_to "All Questions", questions_path %>
